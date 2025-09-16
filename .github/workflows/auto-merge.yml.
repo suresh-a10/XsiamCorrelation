@@ -1,0 +1,26 @@
+name: Auto Merge Dev to UAT
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  merge_to_uat:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetches all history for the merge
+
+      - name: Set up Git
+        run: |
+          git config --global user.email "sua@paloaltonetworks.com"
+          git config --global user.name "suresh-a10"
+
+      - name: Merge dev into UAT
+        run: |
+          git checkout UAT
+          git merge dev --no-ff -m "Auto-merge from dev branch"
+          git push origin UAT
